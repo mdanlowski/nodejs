@@ -1,0 +1,80 @@
+body {
+	font-family: monospace;
+	margin: 0px;
+	padding: 0px;
+	cursor: url(pencil.gif), auto; 
+}
+
+.p5Canvas {
+	border: 1px solid black;
+
+}
+
+aside.chat {
+	float: right;
+	height: 640px;
+	width: 300px;
+	border: 2px solid black;
+}
+
+.chat-messages {
+	padding: 0 3px 0 3px;
+	height: 530px;
+	max-width: 294px;
+	/*border: 1px dotted dodgerblue;*/
+	/*-------text mgmt---------*/
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.chat-username {
+	color: dodgerblue;
+	font-weight: bold;
+}
+
+fieldset.chat {
+	border: none;
+	/*position: relative;*/
+	
+}
+
+.toolbar {
+	position: absolute;
+	bottom: 0;
+	padding: 5px;
+	/*max-width: 640px;*/
+}
+
+.clickable-tool {
+	display: inline-flex;
+	flex-direction: row;
+	width: 30px;
+	height: 30px;
+	/*background: red;*/
+}
+.clickable-tool:hover {
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+/*scrollbar*/
+::-webkit-scrollbar {
+    width: 8px;
+    
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: dodgerblue; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #21A5ff; 
+}
