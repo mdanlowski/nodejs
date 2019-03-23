@@ -1,0 +1,29 @@
+{
+  "name": "todoexplfrontend",
+  "version": "1.0.0",
+  "description": "node.js practice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdanlowski/nodejs.git"
+  },
+  "keywords": [
+    "react",
+    "node",
+    "mongo"
+  ],
+  "author": "mdanlowski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdanlowski/nodejs/issues"
+  },
+  "homepage": "https://github.com/mdanlowski/nodejs#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.4",
+    "express-generator": "^4.16.0"
+  }
+}
