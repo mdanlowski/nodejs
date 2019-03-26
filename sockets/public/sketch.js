@@ -1,7 +1,7 @@
 function setup() {
     let cCounter = $('#client-count')[0];
     createCanvas(640, 640);
-    background("whitesmoke");
+    background("white");
 
     // socket = io.connect('http://localhost:3000');
     socket = io();
