@@ -1,7 +1,7 @@
 function setup() {
     let cCounter = $('#client-count')[0];
-    
     createCanvas(640, 640);
+    background("whitesmoke");
 
     // socket = io.connect('http://localhost:3000');
     socket = io();
@@ -62,11 +62,15 @@ function onMouseDown(color, xpos, ypos, prevxpos, prevypos) {
 
 function sendChatMessage(){
     let messageBody = $('#message-body')[0].value;
+    if(!messageBody.length || messageBody.match(/(^\s*$)/)){
+      alert("Cannot send empty message");
+      return;
+    }
     console.log(messageBody);
 
     var data = {
         username : socket.id,
-        msg : messageBody,
+        msg : messageBody.trim(),
 
     };
 
@@ -75,7 +79,24 @@ function sendChatMessage(){
 }
 
 function setrgb(r, g, b){
+  console.log(r)
+  console.log(r[0])
+  console.log(r.substr(0,3))
+  console.log(r.substr(3,2))
+  console.log(r.substr(5,3))
+
+    if(r[0] == "#"){
+      hex
+      g = unhex(r.substr(3,2));
+      b = unhex(r.substr(5,2));
+      r = unhex(r.substr(1,2));
+    }
     clientColor = 'rgb(' + r + ',' + g + ',' + b + ')';
     console.log(clientColor);
 
 }
+
+function readKey(e){
+  var k = e.key;
+  k==="Enter" ? sendChatMessage() : null;
+};
