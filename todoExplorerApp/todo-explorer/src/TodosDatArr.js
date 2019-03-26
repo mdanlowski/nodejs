@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TodoItem from "./Todo"
+import TodoItem from "./TodoItem"
 
 export default class TodosDatArr extends Component {
   constructor(props){
@@ -7,9 +7,15 @@ export default class TodosDatArr extends Component {
   }
 
   render(){
-    console.log(this.props);
+    // console.log(this.props);
     return(
-        this.props.arrdata.map(td => <TodoItem key={td._id} id_={td._id} fname={td.file_path} fdata={td.contents}/>)
+        this.props.arrdata.map(td => <TodoItem 
+          key={td._id}
+          id_={td._id}
+          fname={td.file_path}
+          fdata={td.contents}
+        />
+      )
     );
   }
 }
