@@ -27,6 +27,7 @@ var clientsConnected = 0;
 
 io.sockets.on('connection', function(socket){
 
+
 	clientsConnected++;
 	console.log('--> client connected: ' + socket.id, '\nclient count: ' + clientsConnected);
 	broadcastClientCount(true, socket.id);

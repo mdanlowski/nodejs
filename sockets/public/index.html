@@ -1,67 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="public/style.css" />
-  <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-  <script type="text/javascript" src="public/main.js"></script>
-
   <meta charset="UTF-8">
   <title>Sockets Paint</title>
+  
+  <link rel="stylesheet" type="text/css" href="public/style.css" />
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="public/main.js"></script>
   <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.js"></script>
+  <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.js"></script> -->
+  <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.js"></script> -->
   <script type="text/javascript" src="public/sketch.js"></script>
 
 </head>
 <body>
 
-  <div class="toolbar">
-    <div draggable="true" class="draggable-widget"><span class="mouse-event">[MOVE]</span>
-      Tools: </div><hr />
-      <div class="colorpicker">
-      <input type="color" id="html5colorpicker" onchange="setrgb(this.value)" value="#000000" />
-        <!-- <div style="margin:auto;width:236px;">
-    <script>
-    var thistop = "-35";
-    var thisleft = "135";
-    </script>
-    
-          <div id="selectedhexagon" style="visibility: visible; position: relative; width: 21px; height: 21px; background-image: url(&quot;img_selectedcolor.gif&quot;); top: -20px; left: 162px;"></div>
-        <div id="divpreview" style="visibility: hidden; background-color: rgb(255, 0, 0);">&nbsp;</div>
-          <h3>Or Enter a Color:</h3>
-          <div id="entercolorDIV" class="">
-            <input type="text" id="entercolor" placeholder="Color value" onkeydown="submitOnEnter(event)" onfocus="clearWrongInput();" style="z-index:0;"><button class="btn btn-default" type="button" onclick="clickColor(0,-1,-1)" style="z-index:0;">OK</button>
-          </div>
-          <div id="wronginputDIV" style="display: none;">Wrong Input</div>
-          <br>
-          <div id="html5DIV">
-            <h3>Or Use HTML5:</h3>
-            
-          </div>
-          <br>
-          <br>        
-        </div> -->
+  <div id="canvas-container">
 
-      </div>
+  </div>
+
+  <div class="toolbar">
+
+    <div draggable="true" class="draggable-widget">
+      <span class="mouse-event">[MOVE]</span>Tools
+    </div>
+    <hr />
+    <div class="colorpicker">
+      <input type="color" id="html5colorpicker" onchange="setrgb(this.value)" value="#000000" />
+    </div>
     
   </div>
   
   <aside class="chat">
-    <div draggable="true" class="draggable-widget"> <span class="mouse-event">[MOVE]</span> Clients connected: <span id="client-count"></span></div>
-    <hr />
-    <div class="chat-messages">
-
+    <div draggable="true" class="draggable-widget">
+      <span class="mouse-event">[MOVE]</span> Clients connected: <span id="client-count"></span>
     </div>
-
-    <fieldset class="chat">   
+    <hr />
+    <div class="chat-messages">      
+    </div>
+    <fieldset class="new-message-box">   
       <textarea onkeypress="readKey(event);" id="message-body" rows="3" cols="27"></textarea>
       <button onclick="sendChatMessage();" id="message-send">Send</button>
     </fieldset>
-
   </aside>
 
 </body>

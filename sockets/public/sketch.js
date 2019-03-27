@@ -1,6 +1,7 @@
 function setup() {
     let cCounter = $('#client-count')[0];
-    createCanvas(640, 640);
+    let canvas = createCanvas(640, 640);
+    canvas.parent("canvas-container")
     background("white");
 
     // socket = io.connect('http://localhost:3000');
@@ -12,7 +13,9 @@ function setup() {
         line(data.x, data.y, data.px, data.py);
     });
 
-
+    // let name = prompt("Your nick:"); // USERS CAN NOW INTRODUCE THEMSELVES
+    let name = "cfel";
+    socket.username = name;
 
     // technical
     socket.on('DC', function(data) {
@@ -25,10 +28,16 @@ function setup() {
     });
 
     socket.on('chatMessage', function(data){
-        console.log('received chat event from server');
-        let username = data.username;
-        let messageBody = data.msg;
-        $('.chat-messages').append("<p><span class='chat-username'>" + username + "</span> said:\n" + messageBody + "</p>");
+        // console.log('received chat event from server');
+        function strip(html){
+          let tmp = document.createElement("div");
+          tmp.innerHTML = html;
+          return tmp.textContent || tmp.innerText || "";
+        }
+        let message = "<span class='chat-username'>" + data.username +
+          "</span> said: " + strip(data.msg) + "<br/>";
+
+        $(".chat-messages").append(message);
     });
 
 }
@@ -69,13 +78,12 @@ function sendChatMessage(){
     console.log(messageBody);
 
     var data = {
-        username : socket.id,
+        username : socket.username,
         msg : messageBody.trim(),
-
     };
 
     socket.emit('chatMessage', data);
-    $('#message-body')[0].value = '';
+    $('#message-body')[0].value = null;
 }
 
 function setrgb(r, g, b){

@@ -6,9 +6,14 @@ body {
 	cursor: url(pencil.gif), auto; 
 }
 
-.p5Canvas {
-	border: 1px solid black;
-
+#canvas-container {
+  border: 1px solid black;
+  border-top: 5px solid crimson;
+  width: 640px;
+  height: 640px;
+  position: fixed;
+  left: 10px;
+	
 }
 
 aside.chat {
@@ -35,10 +40,8 @@ aside.chat {
 	font-weight: bold;
 }
 
-fieldset.chat {
+fieldset.new-message-box {
 	border: none;
-	/*position: relative;*/
-	
 }
 
 #message-body {
