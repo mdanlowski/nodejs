@@ -1,0 +1,19 @@
+body {
+	width: 100%;
+  margin: 10px;
+  background-color: #777;
+	font-family: monospace;
+	padding: 0px;
+	cursor: crosshair;
+}
+
+#canvas-container {
+	margin: auto;
+  border: 1px solid black;
+  border-top: 5px solid crimson;
+  width: 640px;
+  height: 640px;
+  position: fixed;
+  left: 10px;
+	
+}
