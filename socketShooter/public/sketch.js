@@ -6,30 +6,39 @@ function setup() {
   let canvas = createCanvas(600, 500);
   canvas.parent("canvas-container")
   background("white");
-
-  socket.emit("newPlayerConnected", plr); // A way
-  console.log(plr.clr);
+  while(plr.guid == 0){
+    plr.guid = socket.id;
+  }
+  socket.emit("newPlayerConnected", plr); // SEND ALL INITIAL PLAYER DATA
+  console.log(COLOR);
 }
 
 function draw(){
   background(0,200,100);
-
-  socket.on('beforePlayers', p => pullAllPlayers(p));
-
-  socket.on('playerConnected', function(data) {
-    otherPlayers[data.id] = data;
-    // otherPlayers = data;
-    // console.log( JSON.stringify(otherPlayers[data.id].x) );
+  
+  // --------->>> HNDLE SOCKET EVENTS -----------
+  // PULL OLD / ADD NEW PLAYERS
+  socket.on('beforePlayers', function(olderPlayersData){
+    // console.log(Object.keys(olderPlayersData));
+    for(let pid of Object.keys(olderPlayersData)){
+      if (!otherPlayers.hasOwnProperty(pid) && pid != plr.guid) { otherPlayers[pid] = olderPlayersData[pid]; }
+    }
   });
-  socket.on('playerDisonnected', function(data) {
-    delete otherPlayers[data];
+  socket.on('playerConnected', function(playerData) {
+    otherPlayers[playerData.guid] = playerData;
+  });
+  socket.on('playerDisonnected', function(playerIdToUnfollow) {
+    console.log("disconnected: ", playerIdToUnfollow)
+    console.log(otherPlayers);
+    delete otherPlayers[playerIdToUnfollow];
+    console.log(otherPlayers);
+
   });
   socket.on('otherPlayerMoved', function(data) {
-    let x_ = data.x;
-    let y_ = data.y;
-    otherPlayers[data.id].x = x_;
-    otherPlayers[data.id].y = y_;
+        let x_ = data.x;    otherPlayers[data.id].x = x_;
+        let y_ = data.y;    otherPlayers[data.id].y = y_;
   });
+  // ----------- HNDLE SOCKET EVENTS <<<---------
   // handleSocketEvents();
   
   plr.update(socket);
@@ -38,6 +47,7 @@ function draw(){
   for(let pid of Object.keys(otherPlayers)){
     // console.log(pid);
     // console.log(otherPlayers[pid]);
+    if(pid == 0) delete otherPlayers[pid];
     fill(otherPlayers[pid].clr)
     ellipse(otherPlayers[pid].x, otherPlayers[pid].y, 30, 30);
     fill(COLOR);
@@ -47,9 +57,8 @@ function draw(){
 
 /* GLOBALS / CONFIG */
 var socket = io();
-let playerGuid = Date.now().toString().substr(5) + "_" + Math.random().toString().substr(2,3);
 let randomColor = HTML5COLORS[Math.floor(Math.random()*HTML5COLORS.length)];
-var plr = new Player(guid = playerGuid, 300, 300, 100, 10, randomColor, projectileEmitter);
+var plr = new Player(300, 300, 100, 10, randomColor, projectileEmitter);
 
 var COLOR = plr.clr;
 

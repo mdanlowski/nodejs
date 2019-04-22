@@ -29,31 +29,29 @@ var ALLPLAYERS = {};
 io.sockets.on('connection', function(socket){
 	/* ------------ NEW PLAYER SETUP ---- */
 	playersConnected++;
-  console.log("--> player connected\t" + socket.id + "\t| " + playersConnected);
-  socket.on("newPlayerConnected", function(newPlayerData){
-		// copy all players data only without the most recent player
-		let earlierPlayers = ALLPLAYERS;
-		// add most recent player to the hash
-		ALLPLAYERS[socket.id] = newPlayerData;
-		newPlayerData.id = socket.id;
-		// broadcast newest player to already connected players
-		socket.broadcast.emit('playerConnected', newPlayerData);
-		// send older players to newest player
+  console.log("--> player connected\t| " + socket.id + "\t| " + playersConnected);
+  socket.on("newPlayerConnected", function(newPlayerData){ // RECEIVE ALL INITIAL PLR DATA
+		let earlierPlayers = ALLPLAYERS;	// copy all players data only without the most recent player
+		console.log("EARPLR: " + Object.keys(earlierPlayers).length );
+		ALLPLAYERS[socket.id] = newPlayerData;	// add most recent player to the hash
+		socket.broadcast.emit('playerConnected', newPlayerData);  // broadcast newest player to already connected players
+		console.log(earlierPlayers);	// send older players to newest player
+		socket.emit('chatMessage', {username: "Server", msg: "Hello! <br/> Use this chat to talk with other players. <br/> Use WASD to move around... <br/> Thats pretty much it for now :J" })
 		socket.emit('beforePlayers', earlierPlayers);
-
   });
 
-	/* ------------ INCOMING ------------ */
+	/* ------------ GAME EVENTS ------------ */
 	socket.on('playerMoveEvent', function(data){
     data.id = socket.id
 		socket.broadcast.emit('otherPlayerMoved', data);
-		//console.log(JSON.stringify(data));
 	});
 
+	/* ------------ TECHNICAL ------------ */
 	socket.on('disconnect', function() {
+		let playerIdToUnfollow = socket.id;
 		console.log("<-- player disconnected\t| " + socket.id + "\t| " + playersConnected);
+		io.emit('playerDisconnected', playerIdToUnfollow);
 		delete ALLPLAYERS[socket.id];
-		io.sockets.emit('playerDisconnected', socket.id);
 		playersConnected--;
 	});
 
@@ -62,17 +60,17 @@ io.sockets.on('connection', function(socket){
 		socket.broadcast.emit('playerMouseDown', data);
 	});
 
-	socket.on('chatMessage', function(data) {
-		// capture and reemit chat msgs
-		//console.log(data);
-		io.sockets.emit('chatMessage', data);
+	
+	/* ------------ CHAT ------------ */
+	socket.on('chatMessage', function(messageData) {
+		io.sockets.emit('chatMessage', messageData);
 	});
 
-	/* ------------ OUTGOING ------------ */
-	socket.emit('serverMsg', { 
-		msg : 'hello'
+	/* ------------ DEBUG ------------ */
+	socket.on('bugz', d => {
+		console.log("-------------- debug info --------------")
+		console.log(ALLPLAYERS);
 	});
-
 
 });
 

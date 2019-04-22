@@ -1,5 +1,5 @@
-function Player(guid_, initX, initY, hp_, ammo_, color_, gun_){
-  this.guid = guid_;
+function Player(initX, initY, hp_, ammo_, color_, gun_){
+  this.guid = 0;
   this.x = initX;
 	this.y = initY;
 	this.hp = hp_;
@@ -12,10 +12,12 @@ function Player(guid_, initX, initY, hp_, ammo_, color_, gun_){
   this.update = function(socket){
     self = this;
     self.calcPos();
+
 	  fill( self.clr  );
 	  stroke(0);
     ellipse(self.x, self.y, 30, 30);
-    // prepare and send socket event
+
+    self.drawStats()
   }
   
 	this.drawStats = function(){
@@ -41,8 +43,9 @@ function Player(guid_, initX, initY, hp_, ammo_, color_, gun_){
       if (keyIsDown(83)) {
         this.y += 2;
       }
+      // prepare and send socket event
       if(beforeMove.ox != this.x || beforeMove.oy != this.y){
-        let data = {guid: this.guid, x: this.x, y: this.y}
+        let data = {id: this.id, x: this.x, y: this.y}
         socket.emit('playerMoveEvent', data);
       }
     }
