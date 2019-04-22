@@ -27,21 +27,35 @@ var playersConnected = 0;
 var ALLPLAYERS = {};
 
 io.sockets.on('connection', function(socket){
-  /* ------------ NEW PLAYER SETUP ---- */
-  //console.log("--> player connected");
+	/* ------------ NEW PLAYER SETUP ---- */
+	playersConnected++;
+  console.log("--> player connected\t" + socket.id + "\t| " + playersConnected);
   socket.on("newPlayerConnected", function(newPlayerData){
-    ALLPLAYERS[newPlayerData.guid] = newPlayerData;
-    //console.log(JSON.stringify(ALLPLAYERS[newPlayerData.guid]));
+		// copy all players data only without the most recent player
+		let earlierPlayers = ALLPLAYERS;
+		// add most recent player to the hash
+		ALLPLAYERS[socket.id] = newPlayerData;
+		newPlayerData.id = socket.id;
+		// broadcast newest player to already connected players
+		socket.broadcast.emit('playerConnected', newPlayerData);
+		// send older players to newest player
+		socket.emit('beforePlayers', earlierPlayers);
+
   });
-  playersConnected++;
 
 	/* ------------ INCOMING ------------ */
 	socket.on('playerMoveEvent', function(data){
-    data.color = ALLPLAYERS[data.guid].color
+    data.id = socket.id
 		socket.broadcast.emit('otherPlayerMoved', data);
 		//console.log(JSON.stringify(data));
 	});
 
+	socket.on('disconnect', function() {
+		console.log("<-- player disconnected\t| " + socket.id + "\t| " + playersConnected);
+		delete ALLPLAYERS[socket.id];
+		io.sockets.emit('playerDisconnected', socket.id);
+		playersConnected--;
+	});
 
 
 	socket.on('playerMouseDown', function(data) {
@@ -59,10 +73,6 @@ io.sockets.on('connection', function(socket){
 		msg : 'hello'
 	});
 
-	socket.on('disconnect', function() {
-		//console.log("<-- player disconnected");
-		playersConnected--;
-	});
 
 });
 

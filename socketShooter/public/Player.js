@@ -10,9 +10,8 @@ function Player(guid_, initX, initY, hp_, ammo_, color_, gun_){
   this.initialize = function(){ return };
 
   this.update = function(socket){
-    let beginOfLoopFC = frameCount;
     self = this;
-    self.calcPos(beginOfLoopFC);
+    self.calcPos();
 	  fill( self.clr  );
 	  stroke(0);
     ellipse(self.x, self.y, 30, 30);
@@ -22,7 +21,7 @@ function Player(guid_, initX, initY, hp_, ammo_, color_, gun_){
 	this.drawStats = function(){
     fill('red');
     noStroke();
-		rect(this.x - 25, this.y + 20, 0.5 * this.hp, 4
+		rect( this.x - 25, this.y + 20, 0.5 * this.hp, 4
       ); stroke(1);
     }
     
@@ -44,9 +43,7 @@ function Player(guid_, initX, initY, hp_, ammo_, color_, gun_){
       }
       if(beforeMove.ox != this.x || beforeMove.oy != this.y){
         let data = {guid: this.guid, x: this.x, y: this.y}
-        // if(frameCount - fc > 1){
-          socket.emit('playerMoveEvent', data);
-        // }
+        socket.emit('playerMoveEvent', data);
       }
     }
   

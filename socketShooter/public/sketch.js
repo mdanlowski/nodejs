@@ -1,41 +1,81 @@
 /* A way - new player sends his object to the server, then server broadcasts it and his position
- *   later on only guid and new position are sent, and stored in every client's in array of objects
- * B way - data is broadcasted and players are drawn "on the spot"
+*   later on only guid and new position are sent, and stored in every client's in array of objects
+* B way - data is broadcasted and players are drawn "on the spot"
 */
 function setup() {
-  let canvas = createCanvas(800, 500);
+  let canvas = createCanvas(600, 500);
   canvas.parent("canvas-container")
   background("white");
 
-  socket.emit("newPlayerConnected", {guid: plr.guid, color: plr.clr}); // A way
-  console.log(plr.clr)
+  socket.emit("newPlayerConnected", plr); // A way
+  console.log(plr.clr);
 }
 
 function draw(){
-  // let beginOfLoopFC = frameCount;
-  // background(0,222,100);
-  plr.update(socket);
+  background(0,200,100);
+
+  socket.on('beforePlayers', p => pullAllPlayers(p));
+
+  socket.on('playerConnected', function(data) {
+    otherPlayers[data.id] = data;
+    // otherPlayers = data;
+    // console.log( JSON.stringify(otherPlayers[data.id].x) );
+  });
+  socket.on('playerDisonnected', function(data) {
+    delete otherPlayers[data];
+  });
+  socket.on('otherPlayerMoved', function(data) {
+    let x_ = data.x;
+    let y_ = data.y;
+    otherPlayers[data.id].x = x_;
+    otherPlayers[data.id].y = y_;
+  });
+  // handleSocketEvents();
   
+  plr.update(socket);
+
   // DRAW OTHER PLAYERS
-  // if(frameCount - beginOfLoopFC > 20){
-    socket.on('otherPlayerMoved', function(data) {
-      // let clr = data.color;
-      // try { fill(clr); } catch(e) { /*console.log(e.name);*/ }
-      ellipse(data.x,data.y,30,30);
-      
-      // try { fill(plr.color); } catch(e) { }
-    });
-  // }
+  for(let pid of Object.keys(otherPlayers)){
+    // console.log(pid);
+    // console.log(otherPlayers[pid]);
+    fill(otherPlayers[pid].clr)
+    ellipse(otherPlayers[pid].x, otherPlayers[pid].y, 30, 30);
+    fill(COLOR);
+  }
+
 }
 
 /* GLOBALS / CONFIG */
 var socket = io();
 let playerGuid = Date.now().toString().substr(5) + "_" + Math.random().toString().substr(2,3);
-let randomColor = [
-  Math.ceil(Math.random()*255), Math.ceil(Math.random()*255), Math.ceil(Math.random()*255)
-];
-randomColor = HTML5COLORS[Math.floor(Math.random()*HTML5COLORS.length)];
+let randomColor = HTML5COLORS[Math.floor(Math.random()*HTML5COLORS.length)];
 var plr = new Player(guid = playerGuid, 300, 300, 100, 10, randomColor, projectileEmitter);
+
+var COLOR = plr.clr;
+
+var otherPlayers = {};
+
+
+/* SUBROUTINES */
+function pullAllPlayers(data){
+  for(let pid of Object.keys(data)){
+    console.log(data.pid)
+  }
+}
+
+function handleSocketEvents(){
+  socket.on('newPlayerConnected', function(data) {
+    otherPlayers[socket.id] = data;
+  });
+  socket.on('playerDisonnected', function(data) {
+    delete otherPlayers[socket.id];
+  });
+  socket.on('otherPlayerMoved', function(data) {
+    otherPlayers[socket.id].x += data.x;
+    otherPlayers[socket.id].y += data.y;
+  });
+
+}
 
 
 
